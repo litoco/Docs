@@ -118,7 +118,7 @@ fun rememberIsKeyboardOpen(
 ```
 
 
-###### Step 4:
+###### Step 4
 Now that we know the last visible item index just before the keyboards invisibility. We know that after keyboards invisibility the last element that is visible on the screen should the one that we identified and stored in `lastVisibleItemIndex.value` variable. In short, we must scroll down until all the elements below `lastVisibleItemIndex.value` become invisible.
 
 For that to happen, first we need to store the `size` of each element of `LazyColumn` in some `List` and reference it later. Following is the storage code:
