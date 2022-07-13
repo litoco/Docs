@@ -155,7 +155,7 @@ fun rememberIsKeyboardOpen(
 ```
 
 
-###### Step 5:
+###### Step 5
 Now that we know the size of each element in the `LazyColumn`, we will add all element sizes below the last visible element and scroll `LazyColumn` down by the same amount. Following is the code for the desired functionality:
 ```
 fun View.isKeyboardOpen(
