@@ -194,6 +194,8 @@ fun View.isKeyboardOpen(
 ```
 With the above code we can have a workaround for the problem state above. It might function as a workaround only.
 
+</br>
+</br>
 
 Complete code is available [here](https://github.com/litoco/SmallProjects/blob/1c16e40beb81df7ffa95682d2b9cee794d521d99/SolutionTestingApp/app/src/main/java/com/example/solutiontestingapp/MainActivity.kt).
 
