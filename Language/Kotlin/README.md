@@ -1,4 +1,10 @@
 # Kotlin
+Kotlin is the statically typed, multiplatform programming language that support type inference.
+
+Lets understand each of these terms above:
+* **Statically typed**: It means that in koltin the type of the variable is determined at compile only.
+* **Multi-Plaform**: It means that kotlin can be used to write computer softwares that can run on multiple plafroms.
+* **Type Inference**: It means that type of the variable can be automatically determined by the kotlin compiler.
 
 # Table of Contents:
 
