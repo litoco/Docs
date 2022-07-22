@@ -13,191 +13,95 @@ I have created an [issue](https://issuetracker.google.com/issues/237566530) for 
 
 For now we will go with a workaround unless that issue is fixed. So the workaround is as following:
 1. [Check for keyboard visibility/invisibility and listen to it](#step-1)
-2. [On keyboards visibility, calculate keyboard height and scroll `LazyColumn` to that height](#step-2)
-3. [Just before keyboards invisibility, get last visible elements index](#step-3)
-4. [Store the length all the elements](#step-4)
-5. [Scroll `LazyColumn` by summing up the elements size below the last visible element identified in **step 3**](#step-5)
+2. [On keyboards visibility, calculate keyboard height and scroll LazyColumn to the keyboard height](#step-2-step-3-and-step-4)
+3. [Calcuate last visible items distance from keyboards top border](#step-2-step-3-and-step-4)
+4. [After keyboard close, scroll `LazyColumn` such that the last visible item and its distance as calculated in **step 3** are same now as well](##step-2-step-3-and-step-4)
 
 ###### Step 1
-To check for keyboard visibility/invisibility we need to listen for keyboard state, for that we first need to know if keyboard is present on the screen or not.\
-In order to check if keyboard is present on the screen or not we have the following code:
+Following is the code for checking keyboard visibility:
 ```
-fun View.isKeyboardOpen(): Boolean {
+fun View.getKeyboardHeight(): Boolean {
     val rect = Rect()
     getWindowVisibleDisplayFrame(rect)
     val screenHeight = rootView.height
-    val absoluteKeyboardHeight = if (rect.bottom > 0) screenHeight - rect.bottom else 0
-    return absoluteKeyboardHeight > screenHeight * 0.15
+    val absoluteKeyboardHeight = screenHeight - rect.bottom
+    return if (rect.bottom > 0) absoluteKeyboardHeight > screenHeight * .15 else false
 }
-
 ```
-This function `isKeyboardOpen()` will return `true` if keyboard is visible and `false` if keyboard is invisible.
 
-Now that we know that the keyboards state is visible/invisible we will add a listener for these states. That can be done by the following code:
+and it is getting observed for any modifications by the following code:
 ```
 @Composable
 fun rememberIsKeyboardOpen(): State<Boolean> {
     val view = LocalView.current
-    return produceState(initialValue = view.isKeyboardOpen()) {
+
+    return produceState(initialValue = view.getKeyboardHeight()) {
         val viewTreeObserver = view.viewTreeObserver
-        val listener = ViewTreeObserver.OnGlobalLayoutListener { value = view.isKeyboardOpen()}
+        val listener = ViewTreeObserver.OnGlobalLayoutListener { value = view.getKeyboardHeight()}
         viewTreeObserver.addOnGlobalLayoutListener(listener)
+
         awaitDispose { viewTreeObserver.removeOnGlobalLayoutListener(listener)  }
     }
 }
 ```
-We have created the above composable function `rememberIsKeyboardOpen()` for monitoring keyboard state. It will return true if keyboard is visible and false otherwise.
 
 
-###### Step 2
-So the code in the above step will give us the visibility of the keyboard. Now we need calculate the height of the keyboard and scroll up `LazyColumn` with the same amount. We can do that by modifiying the `isKeyboardOpen()` function as following:
+###### Step 2, Step 3 and Step 4
+Following is the function for all these steps, it has steps 2,3 and 4 marked in it:
 ```
-fun View.isKeyboardOpen(
+@Composable
+fun SyncLazyColumnScroll(
     scope: CoroutineScope,
     listScrollStateHolder: LazyListState
-): Boolean {
-    ...
-    
-    if (absoluteKeyboardHeight > screenHeight * 0.15){
-        scope.launch { listScrollStateHolder.scrollBy(absoluteKeyboardHeight.toFloat()) }
-    }
-    
-    return absoluteKeyboardHeight > screenHeight * 0.15
-}
+) {
+    val isKeyboardOpen by rememberIsKeyboardOpen()
+    var prevScreenSize by remember { mutableStateOf(0)}
+    var lastVisibleItemIndex by remember { mutableStateOf(0)}
+    var lastVisibleItemOffset by remember { mutableStateOf(0)}
+    var hasScrolledOnce by remember { mutableStateOf(false)}
 
-```
-We also need to modify `rememberIsKeyboardOpen()` function to include the above modification. So the modified code look like this:
-```
-@Composable
-fun rememberIsKeyboardOpen(
-    scope: CoroutineScope,
-    listScrollStateHolder: LazyListState
-): State<Boolean> {
-    ...
-    return produceState(initialValue = view.isKeyboardOpen(scope, listScrollStateHolder)) {
-        ...
-        val listener = ViewTreeObserver.OnGlobalLayoutListener { value = view.isKeyboardOpen(scope, listScrollStateHolder)}
-        ...
-    }
-}
-```
-
-
-###### Step 3 
-Now that we are able to scroll up when the keyboard becomes visisble we must also be able to to scroll down if keyboard becomes invisible. We accomplish this behaviour with the following code:
-```
-fun View.isKeyboardOpen(
-    ...
-    lastVisibleItemIndex: MutableState<Int>
-): Boolean {
-    ...
-    val visibleItemList = listScrollStateHolder.layoutInfo.visibleItemsInfo
-    if (absoluteKeyboardHeight > screenHeight * 0.15){
-        scope.launch { listScrollStateHolder.scrollBy(absoluteKeyboardHeight.toFloat()) }
-        lastVisibleItemIndex.value = visibleItemList[visibleItemList.size-1].index
-    }
-    
-    return absoluteKeyboardHeight > screenHeight * 0.15
-}
-
-```
-We also need to modify `rememberIsKeyboardOpen()` function to include the above modification. So the modified code look like this:
-```
-@Composable
-fun rememberIsKeyboardOpen(
-    ...
-    lastVisibleItemIndex: MutableState<Int>
-): State<Boolean> {
-    ...
-    return produceState(initialValue = view.isKeyboardOpen(scope, listScrollStateHolder, lastVisibleItemIndex)) {
-        ...
-        val listener = ViewTreeObserver.OnGlobalLayoutListener { value = view.isKeyboardOpen(scope, listScrollStateHolder, lastVisibleItemIndex)}
-        ...
-    }
-}
-```
-
-
-###### Step 4
-Now that we know the last visible item index just before the keyboards invisibility. We know that after keyboards invisibility the last element that is visible on the screen should the one that we identified and stored in `lastVisibleItemIndex.value` variable. In short, we must scroll down until all the elements below `lastVisibleItemIndex.value` become invisible.
-
-For that to happen, first we need to store the `size` of each element of `LazyColumn` in some `List` and reference it later. Following is the storage code:
-```
-fun View.isKeyboardOpen(
-    ...
-    listItemAbsoluteSizeList: MutableList<Int>
-): Boolean {
-    ...
-    val visibleItemList = listScrollStateHolder.layoutInfo.visibleItemsInfo
-    if (absoluteKeyboardHeight > screenHeight * 0.15){
-        ...
-        listItemAbsoluteSizeList[visibleItemList[visibleItemList.size-1].index] = visibleItemList[visibleItemList.size-1].size
-    }
-    
-    return absoluteKeyboardHeight > screenHeight * 0.15
-}
-
-```
-We also need to modify `rememberIsKeyboardOpen()` function to include the above modification. So the modified code look like this:
-```
-@Composable
-fun rememberIsKeyboardOpen(
-    ...
-    listItemAbsoluteSizeList: MutableList<Int>
-): State<Boolean> {
-    ...
-    return produceState(initialValue = view.isKeyboardOpen(scope, listScrollStateHolder, lastVisibleItemIndex, listItemAbsoluteSizeList)) {
-        ...
-        val listener = ViewTreeObserver.OnGlobalLayoutListener { value = view.isKeyboardOpen(scope, listScrollStateHolder, lastVisibleItemIndex, listItemAbsoluteSizeList)}
-        ...
-    }
-}
-```
-
-
-###### Step 5
-Now that we know the size of each element in the `LazyColumn`, we will add all element sizes below the last visible element and scroll `LazyColumn` down by the same amount. Following is the code for the desired functionality:
-```
-fun View.isKeyboardOpen(
-    scope: CoroutineScope,
-    listScrollStateHolder: LazyListState,
-    isKeyboardVisibleBefore: MutableState<Boolean>,
-    lastVisibleItemIndex: MutableState<Int>,
-    listItemAbsoluteSizeList: MutableList<Int>
-): Boolean {
-    ...
-    val visibleItemList = listScrollStateHolder.layoutInfo.visibleItemsInfo
-    if(visibleItemList.isNotEmpty()){
-        if(absoluteKeyboardHeight > screenHeight * 0.15){
-            if (!isKeyboardVisibleBefore.value){
-                ...
-                isKeyboardVisibleBefore.value = true
-            }
-            lastVisibleItemIndex.value = visibleItemList[visibleItemList.size-1].index
-            listItemAbsoluteSizeList[visibleItemList[visibleItemList.size-1].index] = visibleItemList[visibleItemList.size-1].size
-        } else {
-            if (isKeyboardVisibleBefore.value) {
-                var scrollOffset = 0
-                var lastNonAdditionedElementIndex = listScrollStateHolder.layoutInfo.totalItemsCount - 1
-                while (lastNonAdditionedElementIndex > lastVisibleItemIndex.value){
-                    scrollOffset += listItemAbsoluteSizeList[lastNonAdditionedElementIndex]
-                    lastNonAdditionedElementIndex -= 1
+    LaunchedEffect(key1 = isKeyboardOpen, key2 = listScrollStateHolder.isScrollInProgress){
+        if (listScrollStateHolder.layoutInfo.viewportEndOffset > prevScreenSize)
+            prevScreenSize = listScrollStateHolder.layoutInfo.viewportEndOffset
+        if (listScrollStateHolder.layoutInfo.visibleItemsInfo.isNotEmpty()) {
+            if (isKeyboardOpen) {   //**step 2** 
+                if (!listScrollStateHolder.isScrollInProgress && !hasScrolledOnce) {
+                    val size = listScrollStateHolder.layoutInfo.viewportEndOffset
+                    scope.launch { listScrollStateHolder.animateScrollBy((prevScreenSize - size).toFloat()) }
+                    hasScrolledOnce = true
                 }
-                scope.launch {listScrollStateHolder.scrollBy(-scrollOffset.toFloat())}
-                isKeyboardVisibleBefore.value = false
+                // **step 3**
+                lastVisibleItemIndex = listScrollStateHolder.layoutInfo.visibleItemsInfo[listScrollStateHolder.layoutInfo.visibleItemsInfo.size - 1].index
+                lastVisibleItemOffset = listScrollStateHolder.layoutInfo.viewportEndOffset - listScrollStateHolder.layoutInfo.visibleItemsInfo[listScrollStateHolder.layoutInfo.visibleItemsInfo.size - 1].offset
+            } else {    // **step 4**
+                if (!listScrollStateHolder.isScrollInProgress) {
+                    var itemDetails: LazyListItemInfo? = null
+                    for (item in listScrollStateHolder.layoutInfo.visibleItemsInfo){
+                        if (item.index == lastVisibleItemIndex){
+                            itemDetails = item
+                            break
+                        }
+                    }
+                    if (itemDetails != null){
+                        val lastItemCurrentOffset = (listScrollStateHolder.layoutInfo.viewportEndOffset - itemDetails.offset) - lastVisibleItemOffset
+                        if (hasScrolledOnce){
+                            scope.launch { listScrollStateHolder.animateScrollBy(-lastItemCurrentOffset.toFloat()) }
+                        }
+                    }
+                    hasScrolledOnce = false
+                }
             }
         }
     }
 
-    return absoluteKeyboardHeight > screenHeight * 0.15
 }
 ```
-With the above code we can have a workaround for the problem state above. It might function as a workaround only.
+and we can call this function like [it is called here](https://github.com/litoco/SmallProjects/blob/9c58dbc45b03d640921bc9f8f594358e8c327bd7/SolutionTestingApp/app/src/main/java/com/example/solutiontestingapp/MainActivity.kt#L73).
 
 </br>
 </br>
 
-Complete code is available [here](https://github.com/litoco/SmallProjects/blob/1c16e40beb81df7ffa95682d2b9cee794d521d99/SolutionTestingApp/app/src/main/java/com/example/solutiontestingapp/MainActivity.kt).
+Complete code is available [here](https://github.com/litoco/SmallProjects/blob/9c58dbc45b03d640921bc9f8f594358e8c327bd7/SolutionTestingApp/app/src/main/java/com/example/solutiontestingapp/MainActivity.kt).
 
 With the above code we achieve our desired output as shown below:
 
