@@ -41,6 +41,36 @@ Data type for Numbers:
 | Int | 32 | -2<sup>31</sup> | 2<sup>31</sup> - 1 |
 | Long | 64 | -2<sup>63</sup> | 2<sup>63</sup> - 1 |
 
+In kotlin we represent binary numbers as `0b10` and hexadecimal numbers as `0xFA`. There is no octals in kotlin.
+
+To store these data types we use `variables`.\
+A variable has a name called `identifier`.\
+This `identifier` must be different for different variables.\
+We can access variables value with the help of these identifiers.
+
+To declare a variable we use two different keywords `val` and `var`.\
+`val` is used to define an immutable variable or constants (i.e. its value can't change).\
+`var` is used to define a mutable variable, that can change with the program execution.
+
+We should try to use `val` over `var` for variable declaration because a changing variable decreases the redability of code.
+
+We use tags to define certain data types like: `float`, `long`.\
+Eg: `val floatValue = 1.314f`, `var longValue = 123_456_789L; longValue = 100_000_000_000L`
+
+For mutable variables the data type of the value assigned to them must be same as at the time of initialisation of the varaible.\
+Eg:
+```
+var mutableVariable = 100
+mutableVariable = "100" //this line will give error
+```
+but, the following will work fine: 
+```
+var longValue = 100L
+longValue = 100_000_000_000L
+```
+
+
+
 ## Conditional Logics
 
 ## Loops
