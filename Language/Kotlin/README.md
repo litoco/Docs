@@ -78,6 +78,12 @@ listOne.add(4) //this line works fine
 ```
 
 We must assign some value to `val` variables before accessing them. If we try to acess them when they are not assigned any value we get error.
+```
+fun main() {
+    val value:Int
+    println(value)// this line gives error
+}
+```
 
 So, `val` is not constant, but if we want to define constants, we use `const` keyword for that.\
 `const` variables must have primitive data types as values.\
