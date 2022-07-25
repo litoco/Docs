@@ -1,4 +1,4 @@
-# Kotlin
+# Kotlin (Work In Progress)
 Kotlin is the statically typed, multiplatform programming language that support type inference.
 
 Lets understand each of these terms above:
@@ -49,15 +49,15 @@ This `identifier` must be different for different variables.\
 We can access variables value with the help of these identifiers.
 
 To declare a variable we use two different keywords `val` and `var`.\
-`val` is used to define an immutable variable or constants (i.e. its value can't change).\
-`var` is used to define a mutable variable, that can change with the program execution.
+`val` is used to define a variable whose values shouldn't change.\
+`var` is used to define a normal variable, that can change with the program execution.
 
 We should try to use `val` over `var` for variable declaration because a changing variable decreases the redability of code.
 
 We use tags to define certain data types like: `float`, `long`.\
 Eg: `val floatValue = 1.314f`, `var longValue = 123_456_789L; longValue = 100_000_000_000L`
 
-For mutable variables the data type of the value assigned to them must be same as at the time of initialisation of the varaible.\
+For normal variables the data type of the value assigned to them must be same as at the time of initialisation of the varaible.\
 Eg:
 ```
 var mutableVariable = 100
@@ -69,6 +69,33 @@ var longValue = 100L
 longValue = 100_000_000_000L
 ```
 
+`val` variables must not be misunderstood as immutable. It means that the value of the variable once assigned can never be changed. However the internal state of the value of the variable can change.\
+Eg:
+```
+val listOne = mutableListOf(1,2,3)
+listOne = mutableListOf(1,2,3,4) // this line will give error
+listOne.add(4) //this line works fine
+```
+
+We must assign some value to `val` variables before accessing them. If we try to acess them when they are not assigned any value we get error.
+
+So, `val` is not constant, but if we want to define constants, we use `const` keyword for that.\
+`const` variables must have primitive data types as values.\
+And they must be defined at the top level outside of functions or class scope or inside `companion objects`.
+```
+const val temp1="This is constant variable1"
+class Temp(){
+    companion object{
+        const val temp2="This is constant variable2"
+    }
+}
+
+fun main() {
+    println(Temp.temp2)
+    println(temp1)
+}
+
+```
 
 
 ## Conditional Logics
