@@ -130,6 +130,11 @@ str = "String"
 //both are valid variable declaration
 ```
 
+Here `//` between the code blocks denote comments. Comments are used to explain the code to developer and tell the compiler to not execute a specific block of the program. There are 3 ways in which we define comments in kotlin:
+1. End of line comments (`// comments`): kotlin compiler ignores whatever is written after `//` until the end of line
+2. Multi line comments (`/** comments **/`): kotlin complier ignores whatever is written in between `/**` and `**/`
+3. Documentation comment (`/** Docs string */`): Koltin complier treat this type of comment as a docstring. And hence provides special keyword like  `@return`, `@params` and so on, for providing better explanation to different parts of code.
+
 
 ## Conditional Logics
 
