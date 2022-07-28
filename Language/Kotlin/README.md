@@ -103,6 +103,33 @@ fun main() {
 
 ```
 
+Variable declaration in kotlin can be done in two ways:
+1. `val/var identifier = Initialization value` 
+2. `val/var identifier:Type = Initialization value`
+
+For the first type of declaration the type of the variable is determined by kotlin itself. This feature of kotlin is called **type inference**.\
+For this to be valid variable declaration we must initialize the variable at the time of defining it.\
+Eg:
+```
+var integer = 1 // is a valid variable declaration
+
+//vs
+
+var str
+str = "String" // is an invalid variable declaration and it will through error
+```
+
+For the second type of variable declaration the `Type` of the variable must be in captial letters and in this declaration initialization of variable can be done in future
+```
+var integer:Int = 1
+
+//vs
+
+var str:String
+str = "String"
+//both are valid variable declaration
+```
+
 
 ## Conditional Logics
 
