@@ -136,6 +136,30 @@ Here `//` between the code blocks denote comments. Comments are used to explain 
 3. Documentation comment (`/** Docs string */`): Koltin complier treat this type of comment as a docstring. And hence provides special keyword like  `@return`, `@params` and so on, for providing better explanation to different parts of code.
 
 
+</br>
+</br>
+Finally to recap:
+
+| Data type | Size(bits) | Min. Value | Max. Value |
+| --- | ----------- | --------- | ---------- |
+| Byte | 8 | -2<sup>7</sup> | 2<sup>7</sup> - 1 |
+| Short | 16 | -2<sup>15</sup> | 2<sup>15</sup> - 1 |
+| Int | 32 | -2<sup>31</sup> | 2<sup>31</sup> - 1 |
+| Long | 64 | -2<sup>63</sup> | 2<sup>63</sup> - 1 |
+| Float | 32 | upto 6-7 decimal places | upto 6-7 decimal places |
+| Double | 64 | upto 14-16 decimal places | upto 14-16 decimal places |
+| Char | 16 | - | - |
+
+`Boolean: true/false`
+
+**To know the maximum/minimum values of numbers:**\
+`Int.MAX_VALUE`, `Long.MIN_VALUE`, similarly for other types.\
+**To know of numbers in bits/bytes format:**\
+`Int.SIZE_BYTES` or `Int.SIZE_BITS`
+
+
+
+
 ## Conditional Logics
 
 ## Loops
