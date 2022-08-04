@@ -10,7 +10,7 @@ Lets understand each of these terms above:
 
 In this page we will learn about the following topics of Kotlin language:
 
-1. [Data Types](#data-types)
+1. [Data Types](#data-types-and-basics)
 2. [Conditional Logics](#conditional-logics)
 3. [Loops](#loops)
 4. [Collections](#collections)
@@ -23,7 +23,7 @@ In this page we will learn about the following topics of Kotlin language:
 11. [Kotlin Java Interoperability](#kotlin-java-interoperability)
 
 
-## Data Types
+## Data Types and basics
 Before understanding data types we will first try to understand what are **literals**. 
 
 **Literals:** In kotlin or any other programming language we operate on numbers, character and strings. These are called **literals** the very basic entity of a language. Any thing that we do involve these **literals**.\
@@ -157,8 +157,26 @@ Finally to recap:
 **To know of numbers in bits/bytes format:**\
 `Int.SIZE_BYTES` or `Int.SIZE_BITS`
 
+**STDIN/STDOUT:**\
+To take input from the STDIN we use following methods:
+1. `readLine()!!`
+2. `readln()`
+3. `Scanner`
 
+**`readLine()!!`:** Is used to read one non-nullable line from the STDIN\
+**`readln()`:** Works similar to `readLine()` but was introduced in kotlin 1.6 and later.\
+**`Scanner`:** We can also use javas scanner class in kotlin\
+To assign value to multiple variables at the same time we use:\
+`val (a,b,c) = readln().split(" ")`
 
+To use `scanner` class following is the syntax:
+```
+Scanner scanner = Scanner(System.`in`)
+val singleStringReading = scanner.next() // reads a single word from the STDIN line and places the cursor after the scanned string
+val integerReading = scanner.nextInt() // reads a number from the STDIN line and places the cursor after the scanned number
+val readLine = scanner.nextLine() // reads the whole line from the STDIN line and places the cursor on the next line
+```
+Similarly there are other reading functions available in `Scanner` class that can be used based on requirement.
 
 ## Conditional Logics
 
