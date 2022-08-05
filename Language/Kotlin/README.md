@@ -178,6 +178,11 @@ val readLine = scanner.nextLine() // reads the whole line from the STDIN line an
 ```
 Similarly there are other reading functions available in `Scanner` class that can be used based on requirement.
 
+For **data type conversion** following are the available methods:
+`toString()`, `toInt()`, `toFloat()`, `toDouble()`, `toByte()`,`toShort()`, `toLong()`, `toBoolean()`.\
+Data type conversion from larger type like `Long` to smaller type like `Int` may lead to `type overflow`. So we need to keep this in mind while doing type conversions.\
+If we try to convert `String` to `Boolean` we will get `true` only if the string is having case insensitive "true". Else every other thing is False.
+
 ## Conditional Logics
 
 ## Loops
