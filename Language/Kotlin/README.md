@@ -183,6 +183,13 @@ For **data type conversion** following are the available methods:
 Data type conversion from larger type like `Long` to smaller type like `Int` may lead to `type overflow`. So we need to keep this in mind while doing type conversions.\
 If we try to convert `String` to `Boolean` we will get `true` only if the string is having case insensitive "true". Else every other thing is False.
 
+#### String
+A string is a collection of character enclosed inside double quotes ("").
+- To get length of string use `.length`
+- To repeat given string use `.repeat(2)` function
+- For string concatenation the value must start with a string followed by any other data type or with character followed by a string following any other data types
+- Use raw string along with `trimIndent()` function to treat special characters as ordinary strings. Eg: [see this](https://hyperskill.org/learn/step/12553#raw-string).
+
 ## Conditional Logics
 
 ## Loops
