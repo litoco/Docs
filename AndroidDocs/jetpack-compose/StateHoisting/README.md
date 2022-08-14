@@ -7,7 +7,9 @@ So why do they call it a state and not variable itself? Because states are Jetpa
 **Hoisting**: And hoisting generally means moving up.
 
 So on combining the above two definitions **state hoisting** would mean moving up of any value that changes with time. In android term what we do in state hoisting is move the **states** from called composable function to the composable function that is calling it.\
-This makes the composables easy to reuse and decoupled (because any modification in caller function will not require modification in called function). Since this composable is not stroring state we calling it a `stateless` composable.
+This makes the composables easy to reuse and decoupled (because any modification in caller function will not require modification in called function). Since this makes composables not strore state we calling it a `stateless` composable.
+
+So state hoisting help us to make the function **testable** and **reusable**
 
 
 We can implement state hoisting by:
