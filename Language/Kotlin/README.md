@@ -191,6 +191,16 @@ A string is a collection of character enclosed inside double quotes ("").
 - Use raw string along with `trimIndent()` function to treat special characters as ordinary strings. Eg: [see this](https://hyperskill.org/learn/step/12553#raw-string).
 
 ## Conditional Logics
+In koltin there are two types of boolean `true` and `false`. So 0 which is an integer is not treated as "false" here. 
+
+To read booleans from the standard input we use the following functions:
+1. `readln().toBoolean()`: return true if the string entered is case insensitive "true", rest all values are treated as false
+2. `readln().toBooleanStrict()`: return true if string entered is "true" and false if string entered is "false". It is case sensitive. And anything other than these two value will throw an exception
+3. `readln().toBooleanStrictOrNull()`: works the same ways as the above function but it will return `null` if the values are entered are not either "true" or "false" and will not throw an error.
+
+**Order of evaluation of logical operators**: In koltin following is the order of evaluation of the logical operators if there is no perenthesis:\
+! (not) > xor (XOR) > && (and) > || (or)
+
 
 ## Loops
 
