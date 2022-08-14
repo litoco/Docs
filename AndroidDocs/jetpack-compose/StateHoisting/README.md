@@ -2,7 +2,7 @@
 To understand **state hoisting** lets first understand the two words that it comprises of i.e. **state** and **hoisting**.
 
 **State**: As mentioned in the [offical docs](https://developer.android.com/jetpack/compose/state), in android, a state in an android app is any value that can change over time. And yes, it does sound similar to a variable definition in computer programming.\
-So why do they call it a state and not variable itself? Because states are Jetpack specific.
+So why not call a state, a variable? Because states are Jetpack specific whereas variables are programming language specific.
 
 **Hoisting**: And hoisting generally means moving up.
 
@@ -15,6 +15,7 @@ So state hoisting help us to make the function **testable** and **reusable**
 We can implement state hoisting by:
 1. replacing the state as functions argument, and
 2. replacing events as function argument
+3. Help implementing [recommended architecture](https://developer.android.com/topic/architecture#recommended-app-arch) with jetpack compose.
 
 For example: In [here](https://github.com/litoco/SmallProjects/blob/f1261663f27c65682a7217f553d63446f7e3d9ab/SolutionTestingApp/app/src/main/java/com/example/solutiontestingapp/MainActivity.kt#L42) we have `text` as state and `onTextChange` as event handler function.
 
