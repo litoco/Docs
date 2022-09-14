@@ -8,21 +8,21 @@
 ### Background
 Before we go ahead and start our deployment, we will try to understand why we are taking the extra pain of deploying our server to kubernetes. 
 
-Kubernetes is a container orchestration system. Which means that it can deploy, scale and manage multiple containers. Container are the executable unit of 
-softwares. They are the running instance of an image (i.e. containers are built from these images). An image is an immutable file that contains all the 
-necessary details required to run the application. An application is anything that you have build, for example here it is our node js server.
+Kubernetes is a container orchestration system. Which means that it can deploy, scale and manage multiple containers.\
+Container are the executable unit of softwares. They are the running instance of an image (i.e. containers are built from these images).\
+An image is an immutable file that contains all the necessary details required to run the application.\
+And finally an application is anything that you have build, for example here it is our node js server.
 
 So to answer why we need a kuberenetes deployment lies in the benefits of using kuberentes. Suppose because of some problem our node js server that we had 
-for serving the requests is down, this would mean a downtime which would result in loss of users. So to counter that we must have multiple instance of the 
-node js server running. These instances must have some common resources like memory, CPU, network connections etc. So we must manage the resources effectively
-across all these servers. If any of server goes down there has to be a mechanism to redirect traffic other server instances and while trying to solve this
-faulty server to bring it back up and running.
+for serving the requests is down, this would mean a downtime which would result in loss of users. So to prevent it, we must have multiple instance of the 
+node js server running. These instances must have some common resources like memory, CPU, network connections etc. We must also manage the resources effectively across all these different servers. If any of these server goes down there has to be a mechanism to redirect user requests to another running server and in the meantime trying to solve this faulty server to bring it back up and running.
 
-Now we can see how complex it becomes to handles these multiple server instances. It would be really difficult to handle and manage these problems on our
-own. This is where kubernetes comes into picture. It takes the heavy load of managing multiple instance of an application and provides us a simple mechanism
-to interact with these server instances.
+Now we can see how complex it becomes to handle and manage these multiple server instances. It would become really difficult to do these things on our
+own. This is where kubernetes comes into picture. It takes the heavy load of handling and managing multiple instance of an application and provides us a simple mechanism to interact with these server instances.
 
-I hope the above argument answered question of why we need to deploy our nodejs server on kubernetes. Now we will go through the [steps](#steps) to do so.
+I hope the above argument answered the question of why we need to deploy our nodejs server on kubernetes. 
+
+Next we will go through the [steps](#steps) to do the deployment of our server on kubernetes.
 
 
 ### Steps
@@ -71,9 +71,8 @@ CMD ["npm", "start"]
 
 ```
 
-After creating this `Dockerfile`. We need to  build the `image`, for that we will issue the command `docker build . -t nodejs_server_image:v1`\
-Once that command is successful, we will have our `image` created. It can be verified by issuing the command `docker images`. Output 
-of this command will show you the image with image name that you provided while building the image (here it is `nodejs_server_image:v1`).
+After creating this `Dockerfile`. We need to  build the `image`, for that we will issue the command\
+`docker build . -t nodejs_server_image:v1`. After successful execution of the build command we will have our `image` created. It can be verified by issuing the command `docker images`. Output of this command will show you the image with image name that you provided while building the image (here it is `nodejs_server_image:v1`).
 
 We can verify that the image is running fine by issuing the command `docker run -p 8000:5000 nodejs_server_image:v1` and then requesting `http://0.0.0.0:8000`
 from the browser.
@@ -100,7 +99,7 @@ To enable kuberentes from your `docker desktop` go to `settings > kubernetes > t
 Once kubernetes is enabled we are ready to deploy our server on it. For that we need to go though the following steps one by one
 1. Verify that kubernetes is running by executing `kubectl get nodes`. The output should show a `docker-desktop` node in `ready` state.
 2. We will then create a namespace to keep our project organised. To do that we will execute the command `kubectl create namespace test-namespace`
-3. Then we will create a deployment file called `deployment.yaml`
+3. Now we will create a deployment file lets called it `deployment.yaml`. Notice that we have `replicas: 3` this will run 3 instances of our node js server
 `deployment.yaml`
 ```
 apiVersion: apps/v1
@@ -125,15 +124,15 @@ spec:
         ports:
         - containerPort: 5000
 ```
-4. Then we create this deployment in the `test-namespace` by running `kubectl apply -n test-namespace -f deployment.yaml`
-5. To check if the server was running fine or not we can issue command `kubectl -n test-namespace get pods` then grab the name of any one pod, (Pod is the 
-   one that runs the app inside itself) and check the its log by executing the command `kubectl -n test-namespace logs nodejs-server-deployment-6d5b88f49f-rxv9f`\
-   We get output as `Server running at http://0.0.0.0:5000/`which means that our servers are working.
+4. Then we create a deployment based on the above `deployment.yaml` file in the `test-namespace` by issuing the following command\
+`kubectl apply -n test-namespace -f deployment.yaml`
+5. To check if the deployment was successful or not we can issue command `kubectl -n test-namespace get pods` then grab the name of any one pod, (Pod is the one that runs the app inside it) and check the its log by executing the command `kubectl -n test-namespace logs nodejs-server-deployment-6d5b88f49f-rxv9f`\
+   We get output as `Server running at http://0.0.0.0:5000/`which means that the deployment was successful and our servers are running.
  
  
  ###### Creating kubernetes service to access the nodejs server
  
- In order to access this nodejs sever we need to create a service. To create a service we will create `service.yaml` file\
+ In order to access this nodejs sever we need to create a service. This service will expose our 3 applications instance running on different pods outside of this kuberenetes world. To create a service we will create `service.yaml` file\
    `Service.yaml`
    ```
 apiVersion: v1
@@ -152,12 +151,13 @@ spec:
       port: 5000
       targetPort: 5000
    ```
-We then need to create this service in the `test-namespace` by executing `kubectl apply -n test-namespace -f service.yaml`
+Then we can create a service based on the above `service.yaml` file in the `test-namespace` by issuing the following command\
+`kubectl apply -n test-namespace -f service.yaml`
 
 To verify whether the service got created successfully or not we need to issue the command `kubectl -n test-namespace get service`. The output should show
 a service with name `nodejs-server-service`
 
-And to access the nodejs server we can go to `http://localhost:5000/` in the browser. 
+And now we can access the nodejs server by going to url `http://localhost:5000/` in the browser. 
 
 
 **Thats all folks, all the 3 instances of the server are running. So we have successfully deployed our nodejs server to kubernetes**
