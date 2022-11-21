@@ -1,3 +1,3 @@
 # Summary
 
-This repository will contain all the documentations.
+This repository contains documentations on the tech that I work on.
