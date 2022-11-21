@@ -66,3 +66,6 @@ For example at the time of writing this documentation it was `id 'org.jetbrains.
           Text(text = "Hello, there!!", modifier = Modifier.background(Color.Green))
     }
     ```
+    
+    For starter I created an empty activity project and then migrated it to compose. \
+    [Link to the app](https://github.com/litoco/SmallProjects/tree/main/MigrateItToCompose).
