@@ -66,7 +66,7 @@ class AppViewModel: ViewModel() {
 
 **NOTE:**
 
-<span style="color:blue">Notice that here we have used `mutableStateOf` function which is part of the compose recomposition API that tell compose to update its view whenever the data within these API changes</span>
+Notice that here we have used `mutableStateOf` function which is part of the compose recomposition API that tell compose to update their UI with the new data, whenever it changes.
 
 
 ## Integrate ViewModel with Jetpack Compose
