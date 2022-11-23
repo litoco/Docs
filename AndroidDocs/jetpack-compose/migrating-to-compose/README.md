@@ -68,4 +68,4 @@ For example at the time of writing this documentation it was `id 'org.jetbrains.
     ```
     
     For starter I created an empty activity project and then migrated it to compose. \
-    [Link to the app](https://github.com/litoco/SmallProjects/tree/main/MigrateItToCompose).
+    [Link to the app with the above feature](https://github.com/litoco/SmallProjects/tree/12845dca680e8a78ad0ec2cec5ee15de918e0129).
