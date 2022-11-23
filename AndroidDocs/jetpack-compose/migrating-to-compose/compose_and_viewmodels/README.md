@@ -64,6 +64,10 @@ class AppViewModel: ViewModel() {
 }
 ```
 
+**NOTE:**
+<span style="color: blue;">Notice that here we have used `mutableStateOf` function which is part of the compose recomposition API that tell compose to update its view whenever the data within these API changes</span>
+
+
 ## Integrate ViewModel with Jetpack Compose
 
 Now that we have our stateless compose function (compose function with state hoisted up) with [state hoisting](https://developer.android.com/jetpack/compose/architecture#udf) and viewmodel with the necessary logic. 
