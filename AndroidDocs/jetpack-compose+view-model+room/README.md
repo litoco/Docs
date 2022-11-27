@@ -1,6 +1,6 @@
 # Jetpack Compose + ViewModel + Room
 
-In this documentation we are going to make an application that will diplay `userId` of the user and store it in the local storage using Room persistent library. This app is an extension of this [existing application](https://github.com/litoco/SmallProjects/tree/cf4a79d81a1033a29fa7d22433c108de6b1dea01/MigrateItToCompose) on [migrating to compose](https://github.com/litoco/Docs/tree/main/AndroidDocs/jetpack-compose/migrating-to-compose).
+In this documentation we are going to make an application that will diplay `userId` of the user and store it in the local storage using Room persistent library. This app is an extension of this [existing application](https://github.com/litoco/SmallProjects/tree/12845dca680e8a78ad0ec2cec5ee15de918e0129/MigrateItToCompose) on [migrating to compose](https://github.com/litoco/Docs/tree/main/AndroidDocs/jetpack-compose/migrating-to-compose).
 
 # Steps
 1. [Add necessary dependencies](https://github.com/litoco/Docs/edit/main/AndroidDocs/jetpack-compose+view-model+room/README.md#add-necessary-dependecies)
@@ -187,4 +187,4 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
 Once the `messageData` state changes it triggers the recomposition of the compose functions. So we would see the UI with the updated message.
 
-These changes are present in [this app](https://github.com/litoco/SmallProjects/tree/619c6d6957f2baf42ef3788fb1d39aa2daae751e/MigrateItToCompose).
+These changes are present in [this app](https://github.com/litoco/SmallProjects/tree/cf4a79d81a1033a29fa7d22433c108de6b1dea01/MigrateItToCompose).
