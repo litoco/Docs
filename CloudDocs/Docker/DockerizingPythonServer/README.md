@@ -42,7 +42,39 @@ It is an OS process (that runs on a host machine like your personal laptop or de
   On successful execution of the above steps we should get a message log like: `127.0.0.1 - - [...] "GET / HTTP/1.1" 200` on the terminal.
 
 ### Create a docker image for the python application
+
+  Now that we have our application running successfully we can go ahead and create a Dockerfile to package our server inside an image. 
+
+  To create an `image` we need to create a new file inside current directory (python-docker directory) and call it `Dockerfile`. Following will be the content of this file:
+  ```
+FROM python
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+  ```
+  * The first line `FROM python` will pull the latest python image (that has all the tools and packages needed to run a Python application) from the dockerhub
+  * The second line `WORKDIR /app` tells docker to create a working directory inside the image that will be treated as the default directory
+  * The third line `COPY requirements.txt requirements.txt` copies the mentioned file from local repository to the docker image
+  * The fourth line `RUN pip3 install -r requirements.txt` run the package installtion commands in the image to install the packages mentioned in `requirements.txt` file
+  * The fifth line `COPY . .` copies all content of current local directory to images `/app` directory. 
   
+  ***It is interesting to observe that we first copied `requirement.txt` installed the packages mentioned in it and then copied the source code along with all the other files with current command. This is because docker caches the same steps. So since we would not change the `requirement.txt` contents with the same frequency as that of the source code we will not need to download the dependecies again and again. This will save us time in building images fast and also internet data.***
+
+  * The last line of the dockerfile `CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0"]` tells docker to run the provided command when the image is in execution.\
+  Note: *`--host=0.0.0.0`* helps in making the application visible from outside of the container in which it is executed.
+
+  We now have our `Dockerfile` created. To create an image from this we use the following command (inside of the local machine terminal):\
+  `docker build --tag python-docker .`\
+  This command will take the Dockerfile from the current directory(specified by .) and build an image from it with name `python-docker`.
+  
+  We can view the images created by above command by (issuing the following command inside of the local machine terminal):\
+  `docker images`
   
 ## Step 2: Test the image inside a docker container
 
