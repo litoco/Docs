@@ -15,6 +15,6 @@ you can use [personal access tokens](https://docs.github.com/en/authentication/k
 I followed the second option. In this we needed to follow some steps and our personal access token would be generated for use. The steps to followed are:
 
 1. [creating a fine grained personal access token (in beta and subject to change)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
-2. [creating a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)
+2. [creating a personal access token (simpler but less secure than the first one)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)
 
 Both of these approaches have different pros and cons. You can read about them from [fine-grained personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#fine-grained-personal-access-tokens) and [Personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic).
