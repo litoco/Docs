@@ -85,7 +85,9 @@
     <details>
       <summary>View Answer</summary>
       
-      Having styles in separate variable has 2 purposes: i) If there is some error in the styles the inline ones don't show error but the errors are visible in the separated style concept. ii) Make the code clean and reusable
+      Having styles in separate variable has 2 purposes: \
+       i) If there is some error in the styles the inline ones don't show error but the errors are visible in the separated style concept.\
+       ii) Make the code clean and reusable
       
     </details>
 10. How to add alternative of `<SafeAreaView>` in android?
@@ -134,16 +136,14 @@
     <details>
       <summary>View Answer</summary>
 
-      We can use view's `flexDirection: row/column` property to align items horizontally or vertically. If the view is horizontal then x axis is the primary axis and y axis is the secondary axis. Similarly if view is vertical y axis is the primary axis and x axis is the secondary axis.
-    
-      If we want to align views on the primary axis we use `justifyContent` property
-      else if we want to align views on the secondary axis we use `alignItems` property
-      `alignSelf` is used to align view with respect to its parent along the secondary axis
-      `alignItem` aligns views of each primary axis(like row) to the center of the screen along the secondary axis
-      If you want to align the whole view to the center of the screen we can use `alignContent`. `alignContent` only work in `flexWrap: "wrap"`. If there is no wrapping `alignContent` has no effect
-      `flexBasis` works same as width/length depending on the primary axis
-      `flexGrow` fills the entire remaining primary axis, works as `flex: 1` 
-      `flexShrink` shrinks the view to make room for all the views to be visible on the screen, works same as `flex: -1`
+      * We can use view's `flexDirection: row/column` property to align items horizontally or vertically. If the view is horizontal then x axis is the primary axis and y axis is the secondary axis. Similarly if view is vertical y axis is the primary axis and x axis is the secondary axis.\
+      * If we want to align views on the primary axis we use `justifyContent` property else if we want to align views on the secondary axis we use `alignItems` property\
+      * `alignSelf` is used to align view with respect to its parent along the secondary axis\
+      * `alignItem` aligns views of each primary axis(like row) to the center of the screen along the secondary axis\
+      * If you want to align the whole view to the center of the screen we can use `alignContent`. `alignContent` only work in `flexWrap: "wrap"`. If there is no wrapping `alignContent` has no effect\
+      * `flexBasis` works same as width/length depending on the primary axis\
+      * `flexGrow` fills the entire remaining primary axis, works as `flex: 1`\
+      * `flexShrink` shrinks the view to make room for all the views to be visible on the screen, works same as `flex: -1`
       
     </details>
 14. How to access object values inside react native components?
