@@ -334,3 +334,103 @@
       `columnWrapperStyle` is used to style each column item. Eg: here we provide the gap between column and column boundary to be `10`
 
     </details>
+
+18. What is expo router and how to implement it?
+    <details>
+      <summary>View Answer</summary>
+      
+      The **app** folder is where screens are located in expo. So to navigate to another page from current page we use `<Link>` component and provide a href with the link like `href='/product'`. This will find the `product.tsx` file in `app` directory and open it on navigation. 
+
+      **NOTE:** 
+      1. To navigating to another screen on click of a `<View>`, replace the `<View>` tag with `<Pressable>` tag since `<View>` tag doesn't support `onPress` event, but `<Pressable>` tag does.
+      2. We can use `asChild` to the `<Link>` tag to allow react to render screen based on the styles of the children of `<Link>`
+      3. To navigate to a specific `id` we can create a file with the name `[id].tsx` in the `app` folder. Now we can navigate to the specific `id` by providing it as value to the `href` property of `<Link>` tag. Eg: If we want to navigate to page `1`, `2`, `3` and so on we add it like `href='/1'`, `href='/2'`, `href='/3'` and so on. If we want the value of this `href` tag to be a variable we can use backticks like `` href=`/${product.id}` `` in `<Link>` tag
+      4. To receive this `id` on the landing screen file we can use `const { id } = useLocalSearchParams();` and then use it's value as `{id}`.
+
+    </details>
+
+19. How to show a screen inside **bottom tab navigator**?
+    <details>
+      <summary>View Answer</summary>
+
+      <h2>TL;DR</h2>
+      
+      **To init expo react navigation project run command `sudo npx create-expo-app@latest FoodOrdering -t` and choose the navigation option from the menu using the arrow keys**
+      ><h3>Premise</h3>
+      >
+      >We have a screen called `[id].tsx` in `app` directory. We want this screen to be visible inside our tabs screen.
+      >
+      >For now our `[id].tsx` resides in `app` directory and `(tabs)` directory resides inside `app` directory hence `[id].tsx` is shown outside of our **bottom tab navigator** in a separate screen.
+      >
+      >The task is to make `[id].tsx` inside our **bottom tab navigator** screen
+      >
+      >So we have 2 screens inside the `Menu` tab and one screen (for now) in the `Orders` tab
+
+      The two screens (namely `Menu List` screen and `Pizza Details` screen) are needed to be inside of `Menu` tab. Since we want to navigate to another screen from inside of tab navigator, this is a `nested navigation` usecase.\
+      The `app/(tabs)/` directory holds screen files that are to be shown inside **bottom tab navigator**.\
+    For our usecase we want to open `Pizza Details` screen after we click on an item of `Menu List` screen. So we need to put these two screens into one directory `app/(tabs)/menu`. To be specific we create `menu` directory inside `app/(tabs)/` and put `[id].tsx`, `index.tsx` into it.
+
+      Even after moving the 2 screens `[id].tsx` and `index.tsx` into `app/(tabs)/menu` directory, we find that these 2 screens are shown as separate tabs in the tab navigator. To fix this we need `_layout.tsx` inside our `app/(tabs)/menu`. The content of this layout file is as following:
+      ```
+      import { Stack } from "expo-router";
+
+      export default function MenuStack() {
+          return <Stack />;
+      }
+      ```
+      **NOTE:** 
+      * Notice that the default screen that gets shown on to the screen is present in `index.tsx` file of that directory. Eg: Inside `app/(tabs)/` directory the screen will shown according to `app/(tabs)/index.tsx` and the screen shown in `app/(tabs)/menu/` will be `app/(tabs)/menu/index.tsx`
+      </br>
+      Now that we have our screen working as expected we need to change the details in the tab navigator layout which is present in `app/(tabs)/_layout.tsx`. Change the `name="index"` to `name="menu"` inside the `<Tabs.Screen>` tag.
+
+      If we refresh the screen, we see `This screen doesn't exist.` message. This is because there is no `app/(tabs)/index.tsx` file present in the tabs folder. So we will create `app/(tabs)/index.tsx` file and provide it the following content:
+      ```
+      import { Redirect } from 'expo-router';
+
+      export default function TabIndex () {
+        return <Redirect href={'/menu/'} />;
+      };
+      ```
+      In the above code we are simply redirecting the screens content to contain the the content inside `app/(tabs)/menu/index.tsx` file.
+
+      If we refresh the app, again we see `index` tab present in the **tab navigator**. To remove this, we simply tell the **tab navigator** to hide the `index` tab. This done by going to `app/(tabs)/_layout.tsx` and adding `<Tabs.Screen name="menu" options={{href: null}}>`. Here we are hiding the `index` tab since we have already redirected **tab navigator** from `app/(tabs)/index.tsx` to `app/(tabs)/menu/index.tsx`
+
+      If we try to go to the `Pizza Details` page from the `Menu` page. It doesn't work because the folder structures have changed to accommodate these change we change `/(tabs)${product.id}` to `/(tabs)/menu/${product.id}` in `app/components/ProductListItem.tsx` file to make it work.
+
+      Now we are left with only one problem of double header. One header is coming from `app/(tabs)/_layout.tsx`, so we can hide that as well by adding `headerShown: false` property to the `options` property of `<Tabs.Screen name="menu">` tag.
+
+      One last thing left is to change the title of `Menu` screen to `Menu` and `Pizza Details` screen to `Pizza: [id]`. To do that we go to `app/(tabs)/menu/_layout.tsx` file and replace it content with:
+      ```
+      import { Stack } from "expo-router";
+
+      export default function MenuStack() {
+          return <Stack>
+              <Stack.Screen name="index" options={{title: "Menu", headerTitleAlign: 'center'}}/>
+          </Stack>;
+      }
+      ```
+
+      and `app/(tabs)/menu/[id].tsx` files content to:
+      ```
+      import { View, Text } from 'react-native'
+      import React from 'react'
+      import { Stack, useLocalSearchParams } from 'expo-router';
+
+      const ProductDetailsScreen = () => {
+          const { id } = useLocalSearchParams(); 
+
+          return (
+              <View>
+                  <Stack.Screen options={{title: 'Pizza:' + id, headerTitleAlign: 'center'}} />
+                  <Text>Product Details Screen: {id}</Text>
+              </View>
+          );
+      };
+
+      export default ProductDetailsScreen;
+      ```
+      In the above code the `title` option provides title to the page.
+    
+      **AND FINALLY, WE ARE DONE**
+
+    </details>
