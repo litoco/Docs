@@ -434,3 +434,68 @@
       **AND FINALLY, WE ARE DONE**
 
     </details>
+
+
+20. What is state and how do we implement it?
+    <details>
+      <summary>View Answer</summary>
+      
+      State is a react object that contains data about the component. Unlike variables they re-render the component every time their value changes.\
+      To implement state we import the state object from react native and use it inside the component:
+
+      ```
+      import React, { useState } from 'react';
+      ...
+      ...
+
+      const sizes = ["S", "M", "L", "XL"];
+
+      const ProductScreen = () => {
+        ...
+        const [selectedSize, setSelectedSize] = useState('M');
+        ...
+        
+        return (
+          <View style={styles.sizes}>
+                {sizes.map((size) => (
+                    <Pressable 
+                    onPress= {() => {
+                        setSelectedSize(size)
+                    }}
+                    style={[styles.size, {backgroundColor: selectedSize === size ? 'gainsboro': 'white'}]} 
+                    key={size}>
+                        <Text style={[styles.sizeText, {color: selectedSize === size ? 'black': 'grey'}]}>{size}</Text>
+                    </Pressable>
+                ))}
+            </View>
+        )
+
+
+      }
+
+      const styles = StyleSheet.create({
+        sizes: {
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginVertical: 10
+        },
+        size: {
+            backgroundColor: 'gainsboro',
+            width: 50,
+            aspectRatio: 1,
+            borderRadius: 25,
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        sizeText: {
+            fontSize: 20,
+            fontWeight: '500'
+        }
+      });
+
+      export default ProductScreen;
+      
+      ```
+
+
+    </details>
