@@ -452,7 +452,7 @@
 
       const ProductScreen = () => {
         ...
-        const [selectedSize, setSelectedSize] = useState('M');
+        const [selectedSize, setSelectedSize] = useState('M'); /* setSelectedSize is used as a setter method */
         ...
         
         return (
