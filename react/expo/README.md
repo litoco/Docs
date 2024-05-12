@@ -494,8 +494,55 @@
       });
 
       export default ProductScreen;
+      ```
       
+    </details>
+
+
+21. What is modal and how do we implement it?
+    <details>
+      <summary>View Answer</summary>
+      
+      A modal is the react native component to display content above a view. To implement it we need to: create a modal page (lets say we name it to be `cart.tsx`) in the `app/` directory. Then we need to tell react native to treat it as a modal, we do that by specifying it in the `app/_layout.tsx` file as:
+      ```
+      function RootLayoutNav() {
+        const colorScheme = useColorScheme();
+
+        return (
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack>
+              ...
+              <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
+            </Stack>
+          </ThemeProvider>
+        );
+      }
       ```
 
+      After that we need to link to a event to open the page, like a **press event**. For example in this case we linked it to open when we click on cart icon on the menu bar. Following is the code for that we had the following code in `app/(tabs)/menu/_layout.tsx`:
+      ```
+      export default function MenuStack() {
+          return <Stack
+              screenOptions = {{
+                  headerRight: () => (
+                      <Link href="/cart" asChild>
+                        <Pressable>
+                          {({ pressed }) => (
+                            <FontAwesome
+                              name="shopping-cart"
+                              size={25}
+                              color={Colors.light.text}
+                              style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                            />
+                          )}
+                        </Pressable>
+                      </Link>
+                    )
+              }}
+          >
+              ...
+          </Stack>;
+      }
+      ```
 
     </details>
