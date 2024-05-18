@@ -1,4 +1,16 @@
+**HEADS UP:**
+<hr>
+
+This question and answer section an mostly from the following youtube video:\
+[Reference Video](https://www.youtube.com/watch?v=rIYzLhkG9TA)\
+kindly go through it for complete reference
+
+<hr>
+
+
+
 # Question and Answers
+
 1. How to initialize react native application?
     <details>
       <summary>View Answer</summary>
@@ -544,5 +556,126 @@
           </Stack>;
       }
       ```
+
+    </details>
+
+22. What is **`react context`** and how do we implement it?
+    <details>
+      <summary>View Answer</summary>
+      
+      If we pass the `state` which is generated in the parent component, to the children as `props` and the children don't consume the `props` instead they just pass it to another component that consumes it, this can lead to a problem called `Prop Drilling`. Even though it works it is hard to maintain, hence we should avoid it.
+
+      In stead of `state` we can use `react context` in such cases. So `react context` is used to shared data between the different screens avoiding `Prop Drilling`. To implement following are the steps:
+      1. Define a `context provider`. Here, we create it in `app/provider` directory
+      2. Then we create context in that file 
+        ```
+        import { createContext } from 'react';
+        import { CartItem, Product } from '@/types';
+ 
+        type cartType = {
+          items: CartItem[];
+          addItem: (product: Product, size: CartItem['size']) => void;
+        }
+
+        export const CartContext = createContext<cartType>({
+          items: [],
+          addItem: () => {}, 
+        });
+
+        const CartProvider = ({ children }: PropsWithChildren) => {
+
+          const [items, setItems] = useState<CartItem[]>([]);
+          const addItem = (product:Product, size:CartItem['size']) => {
+            console.log(product)
+          };
+
+          return (
+            <CartContext.Provider  /* Provides the values to the other components */
+            value = {{ /* The value that we want to provide context consumers */
+                items: items,
+                onAddItem: () => {}
+              }}  
+            > 
+            { children } /* These children will have access to the values that we provide in this context provider */
+            </CartContext.Provider> 
+          );
+        };
+
+        export default CartProvider; /* we will wrap the screen that would share data between them using this context provider hence we exporting it */
+        ```
+      3. Once we have defined the `context provider`, next we need to wrap the screens that need the context provider. For that in here we go to the root _layout file and wrap the context provider to the whole app screen.
+        **app/_layout.tsx:**
+        ```
+        import CartProvider from '@/providers/CartProvider';
+
+        ...
+        ...
+
+        function RootLayoutNav() {
+          const colorScheme = useColorScheme();
+
+          return (
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <CartProvider>
+                <Stack>
+                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                  <Stack.Screen name="cart" options={{ presentation: 'modal' }} />
+                </Stack>
+              </CartProvider>
+            </ThemeProvider>
+          );
+        };
+
+        ```
+        The `<Stack>` component is a child of `<CartProvider>` component. This is the child that we are referring to as `children` in the 2nd step. So behind the scene `children` get replaced by `<Stack>` component at run time in the `<CartComponent>` component. And needless to say that all the items inside the `<Stack>` will have the values that are exported from  `<CartProvider value = {{...}}>` component which is a `contextProvider` component.
+
+        4. Now we need to consume the values inside the children component. For consuming value we can use `ContextConsumer` or `useContext()`. We will use `useContext()` here. So to consume the value that we passed in `items array` in the `CartContext` we will modify **apps/cart.tsx** as following:
+        ```
+        import hook and cart context
+        import { useContext } from 'react'; /* we use this hook to get values out from the context provider */
+        import { CartContext } from '@/providers/CartProvider';
+
+        const CartScreen = () => {
+          const { items } = useContext(CartContext);
+
+          return (
+            ...
+            ...
+            console.log(items.length)
+          );
+        };
+        ```
+
+        We can also move the `useContext(CartContext)` to the context provider itself and later use it in wherever we want to consume this context provider. So in the **app/provider/CartProvider.tsx**
+        ```
+        ...
+        ...
+        export const useCart = () => useContext(CartContext);
+        ```
+        and use it in **app/cart.tsx**
+        ```
+        import { useCart } from '@/providers/CartProvider';
+        ...
+        ...
+        const { items } = useCart(); /* instead of importing use context and CartContext */
+        ```
+
+        5. At last we need to update the value in `contextProviders` and see it in action. So in the **app/(tabs)/menus/[id].tsx** file, we will get the `contextProvider` and add data to it. This data will be propagated to `cart screen` using `contextProviders`. Following are the changes:
+        ```
+        ...
+        import { useCart } from '@/providers/CartProvider';
+        ...
+        ...
+        const ProductDetailsScreen = () => {
+          ...
+          const { addItem } = useCart();
+          ...
+          ...
+          addItem(product, selectedSize);
+        }
+        ```
+
+
+
 
     </details>
