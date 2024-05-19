@@ -679,3 +679,26 @@ kindly go through it for complete reference
 
 
     </details>
+
+23. How to open one screen from another screen on a press event in expo?
+    <details>
+      <summary>View Answer</summary>
+      
+      To open one screen from another screen on press event we use `useRouter` hook, as following:
+      ```
+      ...
+      import { useRouter } from 'expo-router';
+      ...
+      const ProductDetailsScreen = () => {
+        ...
+        ...
+
+        const router = useRouter();
+        ...
+
+        router.push('/cart'); /* move to cart screen present in app/cart.tsx */
+      };
+
+      ``` 
+
+    </details>
