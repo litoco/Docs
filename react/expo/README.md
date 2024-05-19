@@ -1,7 +1,7 @@
 **HEADS UP:**
 <hr>
 
-This question and answer section an mostly from the following youtube video:\
+The following question and answer section an mostly from the following youtube video:\
 [Reference Video](https://www.youtube.com/watch?v=rIYzLhkG9TA)\
 kindly go through it for complete reference
 
