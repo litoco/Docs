@@ -15,3 +15,9 @@ Suppose we want to get CPU utilization percentage, we can use the following prom
     ```
     TBD
     ```
+
+3. Convert data absense into counter 0:
+   To convert data absense into 0 just use `OR on() vector(0)` in the query:
+   ```
+   prometheus_http_requests_total{status="200"} or on() vector(0)
+   ```
